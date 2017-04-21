@@ -1,0 +1,5 @@
+apt-get install git gcc5-c++ maven ant ruby wget rpm-utils \
+java-1.8.0-openjdk java-1.8.0-openjdk-devel perl-IPC-Cmd
+
+# ln -s /usr/lib/jvm/java /usr/local/java
+# ln -s /usr/share/ant /usr/local/ant
