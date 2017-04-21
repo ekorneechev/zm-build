@@ -24,9 +24,9 @@ if [ -f /etc/altlinux-release ]; then
         i=""
     fi
 
-    grep "Sisyphus" /etc/altlinux-release >/dev/null 2>&1
+    grep "ALT" /etc/altlinux-release >/dev/null 2>&1
     if [ $? = 0 ]; then
-        echo "SISYPHUS${i}"
+        echo "ALT${i}"
         exit 0
     fi
 fi

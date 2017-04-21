@@ -567,7 +567,7 @@ sub GetBuildArch()    # FIXME - use standard mechanism
      if ( $b_os =~ /UBUNTU/ );
 
    return "x86_" . $PROCESSOR_ARCH
-     if ( $b_os =~ /RHEL/ || $b_os =~ /CENTOS/ || $b_os =~ /SISYPHUS/ );
+     if ( $b_os =~ /RHEL/ || $b_os =~ /CENTOS/ || $b_os =~ /ALT/ );
 
    Die("Unknown Arch");
 }
