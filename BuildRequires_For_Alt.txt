@@ -3,3 +3,7 @@ java-1.8.0-openjdk java-1.8.0-openjdk-devel perl-IPC-Cmd
 
 # ln -s /usr/lib/jvm/java /usr/local/java
 # ln -s /usr/share/ant /usr/local/ant
+
+ln -s /usr/lib/rpm/brp.d/032-compress.brp /usr/lib/rpm/brp-compress
+
+export RPM_BUILD_ROOT="~/RPM/BUILD"; ./build.pl
