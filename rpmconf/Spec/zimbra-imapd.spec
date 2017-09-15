@@ -1,18 +1,18 @@
 #
-# spec file for zimbra.rpm
+# spec file for zimbra-imapd.rpm
 #
-Summary: Zimbra Mail
-Name: zimbra-store
+Summary: Zimbra IMAP
+Name: zimbra-imapd
 Version: @@VERSION@@
 Release: @@RELEASE@@
-License: ZPL and other
+License: Various
 Group: Applications/Messaging
 URL: http://www.zimbra.com
 Vendor: Zimbra, Inc.
 Packager: Zimbra, Inc.
 BuildRoot: /opt/zimbra
 AutoReqProv: no
-requires: zimbra-core, zimbra-store-components@@MORE_DEPENDS@@
+requires: zimbra-core
 
 %description
 Best email money can buy
