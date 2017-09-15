@@ -715,7 +715,7 @@ sub GetBuildArch()
      if ( $b_os =~ /UBUNTU[0-9]+_64/ );
 
    return "x86_64"
-     if ( $b_os =~ /RHEL[0-9]+_64/ || $b_os =~ /CENTOS[0-9]+_64/ );
+   if ( $b_os =~ /RHEL[0-9]+_64/ || $b_os =~ /CENTOS[0-9]+_64/ || $b_os =~ /ALT_64/ );
 
    Die("Could not determine BUILD_ARCH");
 }
@@ -727,7 +727,7 @@ sub GetPkgOsTag()
    return "u$1"
      if ( $b_os =~ /UBUNTU([0-9]+)_/ );
 
-   return "x86_" . $PROCESSOR_ARCH
+   return "x86_64"
      if ( $b_os =~ /RHEL/ || $b_os =~ /CENTOS/ || $b_os =~ /ALT/ );
 
    Die("Could not determine PKG_OS_TAG");
