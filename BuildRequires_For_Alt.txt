@@ -6,4 +6,4 @@ java-1.8.0-openjdk java-1.8.0-openjdk-devel perl-IPC-Cmd
 
 ln -s /usr/lib/rpm/brp.d/032-compress.brp /usr/lib/rpm/brp-compress
 
-export RPM_BUILD_ROOT="~/RPM/BUILD"; ./build.pl
+export RPM_BUILD_ROOT="/opt/zimbra_build/BUILDS"; ./build.pl
