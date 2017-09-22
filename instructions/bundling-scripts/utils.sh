@@ -44,11 +44,11 @@ CreatePackage()
     if [[ $1 == UBUNTU* ]]
     then
         CreateDebianPackage
-    elif [[ $1 == RHEL* ]]
+    elif [[ $1 == RHEL* || $1 == ALT* ]]
     then
         CreateRhelPackage
     else
-        echo "OS not supported. Run using UBUNTU or RHEL system. "
+        echo "OS not supported. Run using UBUNTU, ALT or RHEL system. "
         exit 1
     fi
 
