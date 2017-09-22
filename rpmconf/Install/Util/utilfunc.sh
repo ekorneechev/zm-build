@@ -2700,28 +2700,16 @@ getPlatformVars() {
     }
   else
       ISUBUNTU=false
-      REPOINST='yum -y install'
-      REPORM='yum erase -y'
-      PACKAGEINST='yum -y --disablerepo=* localinstall -v'
-      # TODO: This should kept in os-requirement.
-      yum -y install --downloadonly dummyxxxxxxx 2>&1 | grep "no such option: --downloadonly" >/dev/null 2>&1
-      if [ $? -eq 0 ]; then
-        echo "Installing yum-plugin-downloadonly."
-        yum -y install yum-plugin-downloadonly
-        if [ $? -ne 0 ]; then
-          echo "yum --downloadonly should be available. To continue installation."
-          exit 1;
-        fi
-      fi
-      PACKAGEDOWNLOAD='yum -y install --downloadonly'
-      PACKAGERM='yum -y --disablerepo=* erase -v'
-      PACKAGERMSIMULATE='yum -n --disablerepo=* erase -v'
+      REPOINST='apt-get -y install'
+      REPORM='apt-get -y remove'
+      PACKAGEINST='apt-get -y install'
+      PACKAGEDOWNLOAD='apt-get -y -d install'
+      PACKAGERM='apt-get -y remove'
+      PACKAGERMSIMULATE='apt-get -y -s remove'
       PACKAGEEXT='rpm'
       PACKAGEQUERY='rpm -q'
       PACKAGEVERIFY='rpm -K'
-      if [ $PLATFORM = "RHEL6_64" -o $PLATFORM = "RHEL7_64" ]; then
-         STORE_PACKAGES="libreoffice libreoffice-headless"
-      fi
+      STORE_PACKAGES="libreoffice libreoffice-headless"
       LocalPackageDepList() {
          local pkg_f="$1"; shift;
          LANG="en_US.UTF-8" LANGUAGE="en_US" \
