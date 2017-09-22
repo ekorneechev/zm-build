@@ -16,6 +16,21 @@
 # ***** END LICENSE BLOCK *****
 #
 
+if [ -f /etc/altlinux-release ]; then
+    i=`uname -m`
+    if [ "x$i" = "xx86_64" ]; then
+        i="_64"
+    else
+        i=""
+    fi
+
+    grep "ALT" /etc/altlinux-release >/dev/null 2>&1
+    if [ $? = 0 ]; then
+        echo "ALT${i}"
+        exit 0
+    fi
+fi
+
 
 if [ -f /etc/redhat-release ]; then
    i=`uname -i`
