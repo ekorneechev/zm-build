@@ -72,7 +72,7 @@ isFQDN() {
     return
   fi
 
-  NF=`echo $1 | awk -F. '{print NF}'`
+  NF=`echo $1 | awk -F. '{printf NF}'`
   if [ $NF -ge 2 ]; then
     echo 1
   else
@@ -82,13 +82,13 @@ isFQDN() {
 
 verifyIPv6() {
     IP=$1
-    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 8)) { RES = 1 } print RES }'`
+    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 8)) { RES = 1 } printf RES }'`
     return ${BAD_IP}
 }
 
 verifyMixedIPv6() {
     IP=$1
-    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 6)) { RES = 1 } print RES }'`
+    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 6)) { RES = 1 } printf RES }'`
     return ${BAD_IP}
 }
 
@@ -99,7 +99,7 @@ verifyIPv4() {
     then
         BAD_IP=1
     else
-        BAD_IP=`echo $IP | awk -F. 'BEGIN {BAD_OCTET=0} { for (OCTET = 1; OCTET <= 4; OCTET++) { if (($OCTET !~ /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/) || ((OCTET == 1) && ($OCTET == "0"))) { BAD_OCTET=1 } } } END { print BAD_OCTET }'`
+        BAD_IP=`echo $IP | awk -F. 'BEGIN {BAD_OCTET=0} { for (OCTET = 1; OCTET <= 4; OCTET++) { if (($OCTET !~ /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/) || ((OCTET == 1) && ($OCTET == "0"))) { BAD_OCTET=1 } } } END { printf BAD_OCTET }'`
     fi
     return ${BAD_IP}
 }
@@ -218,7 +218,7 @@ askYN() {
 
   while [ 1 ]; do
     ask "$PROMPT" "$DEFAULT"
-    response=$(perl -e "print lc(\"$response\");")
+    response=$(perl -e "printf lc(\"$response\");")
     if [ -z $response ]; then
       :
     else
@@ -266,7 +266,7 @@ checkMySQLConfig() {
   isInstalled zimbra-store
   if [ x$PKGINSTALLED != "x" ]; then
     if [ -f "/opt/zimbra/conf/my.cnf" ]; then
-      BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { print $3 } }' /opt/zimbra/conf/my.cnf`
+      BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { printf $3 } }' /opt/zimbra/conf/my.cnf`
       while [ "${BIND_ADDR}x" != "127.0.0.1x" -a "${BIND_ADDR}x" != "localhostx" ]; do
         echo "The MySQL bind address is currently not set to \"localhost\" or \"127.0.0.1\".  Due to a"
         echo "MySQL bug (#61713), the MySQL bind address must be set to \"127.0.0.1\".  Please correct"
@@ -275,7 +275,7 @@ checkMySQLConfig() {
         if [ $response = "no" ]; then
           break
         fi
-        BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { print $3 } }' /opt/zimbra/conf/my.cnf`
+        BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { printf $3 } }' /opt/zimbra/conf/my.cnf`
       done
       if [ "${BIND_ADDR}x" != "127.0.0.1x" -a "${BIND_ADDR}x" != "localhostx" ]; then
         echo ""
@@ -477,8 +477,8 @@ EOF
       exit 1
     fi
 
-    H_LINE=`sed -e 's/#.*//' /etc/hosts | awk '{ for (i = 2; i <=NF; i++) { if ($i ~ /^'$HOSTNAME'$/) { print $0; } } }'`
-    IP=`echo ${H_LINE} | awk '{ print $1 }'`
+    H_LINE=`sed -e 's/#.*//' /etc/hosts | awk '{ for (i = 2; i <=NF; i++) { if ($i ~ /^'$HOSTNAME'$/) { printf $0; } } }'`
+    IP=`echo ${H_LINE} | awk '{ printf $1 }'`
     INVALID_IP=0
 
     if [ "`echo ${IP} | tr -d '[0-9a-fA-F:]'`" = "" ]
@@ -513,7 +513,7 @@ EOF
     else
         INVALID_IP=1
     fi
-    if [ `echo ${H_LINE} | awk '{ print NF }'` -lt 2 -o ${INVALID_IP} -eq 1 ]
+    if [ `echo ${H_LINE} | awk '{ printf NF }'` -lt 2 -o ${INVALID_IP} -eq 1 ]
     then
         echo ""
         echo "  ERROR: Installation can not proceeed.  Please fix your /etc/hosts file"
@@ -534,9 +534,9 @@ EOF
   # limitation of ext3
   if [ -d "/opt/zimbra/db/data" ]; then
     echo "Checking current number of databases..."
-    FS_TYPE=`df -T /opt/zimbra/db/data | awk '{ if (NR == 2) { print $2 } }'`
+    FS_TYPE=`df -T /opt/zimbra/db/data | awk '{ if (NR == 2) { printf $2 } }'`
     if [ "${FS_TYPE}"x = "ext3"x ]; then
-      DBCOUNT=`find /opt/zimbra/db/data -type d | wc -l | awk '{if ($NF-1 >= 31998) print $NF-1}'`
+      DBCOUNT=`find /opt/zimbra/db/data -type d | wc -l | awk '{if ($NF-1 >= 31998) printf $NF-1}'`
       if [ x"$DBCOUNT" != "x" ]; then
         echo "You have $DBCOUNT databases on an ext3 FileSystem, which is at"
         echo "or over the limit of 31998 databases. You will need to delete at"
@@ -558,14 +558,14 @@ checkRequiredSpace() {
   # /opt/zimbra must have 500MB for upgrades
   GOOD=yes
   echo "Checking required space for zimbra-core"
-  TMPKB=`df -Pk /tmp | tail -1 | awk '{print $4}'`
+  TMPKB=`df -Pk /tmp | tail -1 | awk '{printf $4}'`
   AVAIL=$(($TMPKB / 1024))
   if [ $AVAIL -lt  100 ]; then
     echo "/tmp must have at least 100MB of availble space to install."
     echo "${AVAIL}MB is not enough space to install ZCS."
     GOOD=no
   fi
-  ZIMBRA=`df -Pk /opt/zimbra | tail -1 | awk '{print $4}'`
+  ZIMBRA=`df -Pk /opt/zimbra | tail -1 | awk '{printf $4}'`
   if [ $UPGRADE = "yes" ]; then
     AVAIL=$(($ZIMBRA / 1024))
     if [ $AVAIL -lt 500 ]; then
@@ -699,10 +699,10 @@ determineVersionType() {
     else
       ZMTYPE_CURRENT="FOSS"
     fi
-    ZM_CUR_MAJOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$maj\n"')
-    ZM_CUR_MINOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$min\n"')
-    ZM_CUR_MICRO=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$mic\n"')
-    ZM_CUR_BUILD=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); print "$build\n";')
+    ZM_CUR_MAJOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$maj\n"')
+    ZM_CUR_MINOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$min\n"')
+    ZM_CUR_MICRO=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$mic\n"')
+    ZM_CUR_BUILD=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); printf "$build\n";')
   fi
 
   # if we are removing the install we don't need the rest of the info
@@ -713,11 +713,11 @@ determineVersionType() {
   # need way to determine type for other package types
   ZMTYPE_INSTALLABLE="$(cat ${MYDIR}/.BUILD_TYPE)"
 
-  ZM_INST_MAJOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$maj\n"')
-  ZM_INST_MINOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$min\n"')
-  ZM_INST_MICRO=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$mic\n"')
-  ZM_INST_RTYPE=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); print "$rtype\n";')
-  ZM_INST_BUILD=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); print "$build\n";')
+  ZM_INST_MAJOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$maj\n"')
+  ZM_INST_MINOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$min\n"')
+  ZM_INST_MICRO=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$mic\n"')
+  ZM_INST_RTYPE=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); printf "$rtype\n";')
+  ZM_INST_BUILD=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); printf "$build\n";')
 
   if [ x"$AUTOINSTALL" = "xyes" ]; then
     return
@@ -1064,14 +1064,14 @@ verifyLicenseAvailable() {
   if [ x"$licenseCheck" = "xlicense not installed" -o x"$licenseCheck" = "x" ]; then
     if [ -f "/opt/zimbra/conf/ZCSLicense.xml" ]; then
       licenseCheck="license is OK"
-      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense.xml | grep AccountsLimit | head -1  | awk '{print $3}' | awk -F= '{print $2}' | awk -F\" '{print $2}'`
-      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {print $4 } }'`
-      licenseType=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {print $4 } }'`
+      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense.xml | grep AccountsLimit | head -1  | awk '{printf $3}' | awk -F= '{printf $2}' | awk -F\" '{printf $2}'`
+      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {printf $4 } }'`
+      licenseType=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {printf $4 } }'`
     elif [ -f "/opt/zimbra/conf/ZCSLicense-Trial.xml" ]; then
       licenseCheck="license is OK"
-      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | grep AccountsLimit | head -1  | awk '{print $3}' | awk -F= '{print $2}' | awk -F\" '{print $2}'`
-      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {print $4 } }'`
-      licenseType=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {print $4 } }'`
+      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | grep AccountsLimit | head -1  | awk '{printf $3}' | awk -F= '{printf $2}' | awk -F\" '{printf $2}'`
+      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {printf $4 } }'`
+      licenseType=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {printf $4 } }'`
     else
       echo "ERROR: The ZCS Network upgrade requires a license to be located in"
       echo "/opt/zimbra/conf/ZCSLicense.xml or a license previously installed."
@@ -1244,11 +1244,11 @@ checkUserInfo() {
   fi
   if [ -x /usr/bin/getent ]
   then
-    ZH=`getent passwd zimbra | awk -F: '{ print $6 }'`
-    ZS=`getent passwd zimbra | awk -F: '{ print $7 }' | sed -e s'|.*/||'`
+    ZH=`getent passwd zimbra | awk -F: '{ printf $6 }'`
+    ZS=`getent passwd zimbra | awk -F: '{ printf $7 }' | sed -e s'|.*/||'`
   else
-    ZH=`awk -F: '/^zimbra:/ {print $6}' /etc/passwd`
-    ZS=`awk -F: '/^zimbra:/ {print $7}' /etc/passwd | sed -e s'|.*/||'`
+    ZH=`awk -F: '/^zimbra:/ {printf $6}' /etc/passwd`
+    ZS=`awk -F: '/^zimbra:/ {printf $7}' /etc/passwd | sed -e s'|.*/||'`
   fi
   if [ x$ZH != "x/opt/zimbra" ]; then
     echo "Error - zimbra user exists with incorrect home directory: $ZH"
@@ -1274,7 +1274,7 @@ shutDownSystem() {
   local OS=$(uname -s | tr A-Z a-z)
   if [ x"$OS" = "xlinux" ]; then
     if [ -x /bin/ps -a -x  /usr/bin/awk -a -x /usr/bin/xargs ]; then
-      /bin/ps -eFw | /usr/bin/awk '{ if ($1 == "zimbra" && $3 == "1") print $2 }' | /usr/bin/xargs kill -9 > /dev/null 2>&1
+      /bin/ps -eFw | /usr/bin/awk '{ if ($1 == "zimbra" && $3 == "1") printf $2 }' | /usr/bin/xargs kill -9 > /dev/null 2>&1
     fi
   fi
 }
@@ -1848,7 +1848,7 @@ removeExistingInstall() {
       echo ""
       echo "Removing /opt/zimbra"
       umount /opt/zimbra/amavisd/tmp > /dev/null 2>&1
-      MOUNTPOINTS=`mount | awk '{print $3}' | grep /opt/zimbra/`
+      MOUNTPOINTS=`mount | awk '{printf $3}' | grep /opt/zimbra/`
       for mp in $MOUNTPOINTS; do
         if [ x$mp != "x/opt/zimbra" ]; then
           /bin/rm -rf ${mp}/*
@@ -2171,7 +2171,7 @@ configurePackageServer() {
       elif [ $PLATFORM = "UBUNTU12_64" ]; then
         repo="precise"
       else
-        print "Aborting, unknown platform: $PLATFORM"
+        printf "Aborting, unknown platform: $PLATFORM"
         exit 1
       fi
       apt-key list | grep -w 9BE6ED79 >/dev/null
@@ -2208,7 +2208,7 @@ EOF
       elif [ $PLATFORM = "RHEL7_64" ]; then
         repo="rhel7"
       else
-        print "Aborting, unknown platform: $PLATFORM"
+        printf "Aborting, unknown platform: $PLATFORM"
         exit 1
       fi
       rpm -q gpg-pubkey-0f30c305-5564be70 > /dev/null
