@@ -97,7 +97,7 @@ installPackages() {
       fi
    }
 
-   local -A gather_visit_flag=()
+   local gather_visit_flag=()
    local gather_dep_errors=0
    local repo_pkg_names_delayed=()
    local repo_pkg_names=()
