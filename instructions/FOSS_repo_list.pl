@@ -54,4 +54,7 @@
    { name => "zm-zextras",                           },
    { name => "zm-ssdb-ephemeral-store",              },
    { name => "zm-zimlets",                           },
+   { name => "packages",                             },
+   { name => "zimbra-package-stub",                remote => "gh-ek",},
+
 );
