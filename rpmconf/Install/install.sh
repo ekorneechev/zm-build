@@ -23,6 +23,7 @@ if [ "x$ID" != "x0" ]; then
   exit 1
 fi
 
+
 if [ ! -x "/usr/bin/perl" ]; then
   echo "ERROR: System perl at /usr/bin/perl must be present before installation."
   exit 1
@@ -324,6 +325,8 @@ if [ $SOFTWAREONLY = "yes" ]; then
 	exit 0
 fi
 
+chown zimbra:zimbra /etc/pki/java/cacerts
+
 #
 # Installation complete, now configure
 #
@@ -332,7 +335,21 @@ if [ "x$DEFAULTFILE" != "x" ]; then
 else
 	/opt/zimbra/libexec/zmsetup.pl
 fi
+
 RC=$?
+
+#ALT fixes
+chown root:root /etc/pki/java/cacerts
+su - -c "touch /opt/zimbra/zmstat/fd.csv" zimbra
+su - -c "zmcontrol stop" zimbra
+usermod -a -G postdrop zimbra
+
+read -p "You must restart the system. To do this now? " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    shutdown -r now
+fi
+
 if [ $RC -ne 0 ]; then
 	exit $RC
 fi
