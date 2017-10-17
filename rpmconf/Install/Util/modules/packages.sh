@@ -155,8 +155,10 @@ installPackages() {
 
    if [ "${#local_pkg_files[@]}" -gt 0 ]
    then
-      pretty_display "Installing local packages" "${local_pkg_names[@]}";
-      $PACKAGEINST "${local_pkg_files[@]}" >> $LOGFILE 2>&1
+      echo "Installing local packages:"
+      echo $INSTALL_PACKAGES
+      echo "....."
+      $PACKAGEINST $INSTALL_PACKAGES >> $LOGFILE 2>&1
       if [ $? != 0 ]; then
          pkgError
       fi
@@ -215,8 +217,8 @@ pkgError() {
    exit 1
 }
 
-declare -A global_pkg_loc
-declare -A global_pkg_file
+declare -a global_pkg_loc
+declare -a global_pkg_file
 
 locatePackage() {
    local package="$1"; shift;
