@@ -72,7 +72,7 @@ You _can_ specify all the options on the command-line, as follows:
 The completed build will be archived into a `*.tgz` file that is stored in the appropriate platform and release-specific
 subdirectory of the `BUILDS` directory.  The above command, run on an AltLinux machine, created the following:
 
-    $HOME/installer_build/BUILDS/ALT_64-JUDASPRIEST-884-20170322153033-FOSS-1001/zcs-8.8.4_1001.ALT_64.20170322153033.tgz
+    ../BUILDS/ALT_64-JUDASPRIEST-884-20170322153033-FOSS-1001/zcs-8.8.4_1001.ALT_64.20170322153033.tgz
 
 You can also specify any or all of the required options by placing them in a file
 called `config.build`.  This file should be at the top level of the `zm-build`
@@ -85,3 +85,12 @@ directory.  For example:
     BUILD_TYPE                  = FOSS
     BUILD_THIRDPARTY_SERVER     = files.zimbra.com
     INTERACTIVE                 = 0
+
+## Installing
+
+    su -
+    cd <path_to_archive>
+    tar xzf zcs-8.8.4_1001.ALT_64.20170322153033.tgz
+    mv zcs-8.8.4_1001.ALT_64.20170322153033 zcs
+    cd zcs
+    ./install.sh
