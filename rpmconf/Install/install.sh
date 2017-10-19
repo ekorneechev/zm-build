@@ -341,12 +341,12 @@ RC=$?
 #ALT fixes
 chown root:root /etc/pki/java/cacerts
 su - -c "touch /opt/zimbra/zmstat/fd.csv" zimbra
-su - -c "zmcontrol stop" zimbra
 usermod -a -G postdrop zimbra
 
-read -p "You must restart the system. To do this now? " -n 1 -r
+read -p "If this is the primary installation, you must restart the system. To do this now? (press 'y')" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
+    su - -c "zmcontrol stop" zimbra
     shutdown -r now
 fi
 
