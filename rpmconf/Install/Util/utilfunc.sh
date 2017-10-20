@@ -2700,32 +2700,77 @@ getPlatformVars() {
     }
   else
       ISUBUNTU=false
-      REPOINST='apt-get -y install'
-      REPORM='apt-get -y remove'
-      PACKAGEINST='apt-get -y install'
-      PACKAGEDOWNLOAD='apt-get -y -d install'
-      PACKAGERM='apt-get -y remove'
-      PACKAGERMSIMULATE='apt-get -y -s remove'
-      PACKAGEEXT='rpm'
-      PACKAGEQUERY='rpm -q'
-      PACKAGEVERIFY='rpm -K'
-      STORE_PACKAGES="libreoffice libreoffice-headless"
-      LocalPackageDepList() {
-         local pkg_f="$1"; shift;
-         LANG="en_US.UTF-8" LANGUAGE="en_US" \
-            rpm -q --requires -p "$pkg_f" \
-               | sed -n -e '/^zimbra-/ { s/\s*[<=>].*//; p; }'
-      }
-      RepoPackageDepList() {
-         local pkg="$1"; shift;
-         LANG="en_US.UTF-8" LANGUAGE="en_US" \
-            yum deplist "$pkg" \
-               | sed -n -e '/dependency:\s*zimbra-/ { s/^[^:]*:\s*//; s/\s*[<=>].*//; p }'
-      }
-      LocatePackageInRepo() {
-         local pkg="$1"; shift;
-         LANG="en_US.UTF-8" LANGUAGE="en_US" \
-            yum --showduplicates list available -q -e 0 "$pkg" 2>/dev/null
-      }
+      echo $PLATFORM | egrep -q "ALT"
+      if [ $? = 0 ]; then
+         REPOINST='apt-get -y install'
+         REPORM='apt-get -y remove'
+         PACKAGEINST='apt-get -y install'
+         PACKAGEDOWNLOAD='apt-get -y -d install'
+         PACKAGERM='apt-get -y remove'
+         PACKAGERMSIMULATE='apt-get -y -s remove'
+         PACKAGEEXT='rpm'
+         PACKAGEQUERY='rpm -q'
+         PACKAGEVERIFY='rpm -K'
+         STORE_PACKAGES="libreoffice libreoffice-headless"
+         LocalPackageDepList() {
+            local pkg_f="$1"; shift;
+            LANG="en_US.UTF-8" LANGUAGE="en_US" \
+               rpm -q --requires -p "$pkg_f" \
+                  | sed -n -e '/^zimbra-/ { s/\s*[<=>].*//; p; }'
+         }
+         RepoPackageDepList() {
+            local pkg="$1"; shift;
+            LANG="en_US.UTF-8" LANGUAGE="en_US" \
+               apt-cache depends "^$pkg$" \
+                  | sed -e 's/[<]\([a-z]\)/\1/g' \
+                       -e 's/\([a-z]\)[>]/\1/g' \
+                  | sed -n -e '/Depends:\s*zimbra-/ { s/.*:\s*//; p; }'
+         }
+         LocatePackageInRepo() {
+            local pkg="$1"; shift;
+            LANG="en_US.UTF-8" LANGUAGE="en_US" \
+               apt-cache search --names-only "^$pkg" 2>/dev/null
+         }
+      else
+         REPOINST='yum -y install'
+         REPORM='yum erase -y'
+         PACKAGEINST='yum -y --disablerepo=* localinstall -v'
+         # TODO: This should kept in os-requirement.
+         yum -y install --downloadonly dummyxxxxxxx 2>&1 | grep "no such option: --downloadonly" >/dev/null 2>&1
+         if [ $? -eq 0 ]; then
+           echo "Installing yum-plugin-downloadonly."
+           yum -y install yum-plugin-downloadonly
+           if [ $? -ne 0 ]; then
+             echo "yum --downloadonly should be available. To continue installation."
+             exit 1;
+           fi
+         fi
+         PACKAGEDOWNLOAD='yum -y install --downloadonly'
+         PACKAGERM='yum -y --disablerepo=* erase -v'
+         PACKAGERMSIMULATE='yum -n --disablerepo=* erase -v'
+         PACKAGEEXT='rpm'
+         PACKAGEQUERY='rpm -q'
+         PACKAGEVERIFY='rpm -K'
+         if [ $PLATFORM = "RHEL6_64" -o $PLATFORM = "RHEL7_64" ]; then
+            STORE_PACKAGES="libreoffice libreoffice-headless"
+         fi
+         LocalPackageDepList() {
+            local pkg_f="$1"; shift;
+            LANG="en_US.UTF-8" LANGUAGE="en_US" \
+               rpm -q --requires -p "$pkg_f" \
+                  | sed -n -e '/^zimbra-/ { s/\s*[<=>].*//; p; }'
+         }
+         RepoPackageDepList() {
+            local pkg="$1"; shift;
+            LANG="en_US.UTF-8" LANGUAGE="en_US" \
+               yum deplist "$pkg" \
+                  | sed -n -e '/dependency:\s*zimbra-/ { s/^[^:]*:\s*//; s/\s*[<=>].*//; p }'
+         }
+         LocatePackageInRepo() {
+            local pkg="$1"; shift;
+            LANG="en_US.UTF-8" LANGUAGE="en_US" \
+               yum --showduplicates list available -q -e 0 "$pkg" 2>/dev/null
+         }
+      fi
   fi
 }
