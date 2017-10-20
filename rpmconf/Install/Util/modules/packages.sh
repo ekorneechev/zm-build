@@ -97,7 +97,7 @@ installPackages() {
       fi
    }
 
-   local gather_visit_flag=()
+   local -A gather_visit_flag=()
    local gather_dep_errors=0
    local repo_pkg_names_delayed=()
    local repo_pkg_names=()
@@ -155,10 +155,8 @@ installPackages() {
 
    if [ "${#local_pkg_files[@]}" -gt 0 ]
    then
-      echo "Installing local packages:"
-      echo $INSTALL_PACKAGES
-      echo "....."
-      $PACKAGEINST $INSTALL_PACKAGES >> $LOGFILE 2>&1
+      pretty_display "Installing local packages" "${local_pkg_names[@]}";
+      $PACKAGEINST "${local_pkg_files[@]}" >> $LOGFILE 2>&1
       if [ $? != 0 ]; then
          pkgError
       fi
@@ -217,8 +215,8 @@ pkgError() {
    exit 1
 }
 
-declare -a global_pkg_loc
-declare -a global_pkg_file
+declare -A global_pkg_loc
+declare -A global_pkg_file
 
 locatePackage() {
    local package="$1"; shift;
