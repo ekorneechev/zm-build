@@ -208,9 +208,10 @@ if [ x"$PLATFORM" = x"$installable_platform" -a x"${ALLOW_PLATFORM_OVERRIDE}" = 
   ALLOW_PLATFORM_OVERRIDE="no"
 fi
 
-if [ x"${ALLOW_PLATFORM_OVERRIDE}" = "xno" ]; then
-  configurePackageServer
-fi
+# Disable Zimbra repository's request
+#if [ x"${ALLOW_PLATFORM_OVERRIDE}" = "xno" ]; then
+  #configurePackageServer
+#fi
 
 checkPackages
 
