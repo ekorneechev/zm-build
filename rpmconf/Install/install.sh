@@ -16,6 +16,16 @@
 # ***** END LICENSE BLOCK *****
 #
 
+# Checking bash's version
+VERSION="`bash -version | head -n1`"
+VERSION=${VERSION/-release*/}
+VERSION=${VERSION/*version /}
+MAJOR_VERSION=${VERSION:0:1}
+if [ $MAJOR_VERSION != 4 ]; then
+    echo "Bash's version is $VERSION, need >= 4.0!"
+    exit 1
+fi
+
 ID=`id -u`
 
 if [ "x$ID" != "x0" ]; then
