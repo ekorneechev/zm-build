@@ -2,7 +2,7 @@
    {
       "dir"             => "zm-mailbox",
       "ant_targets"     => ["pkg-after-plough-through-tests"],
-      "deploy_pkg_into" => "zimbra-foss",
+      "deploy_pkg_into" => "bundle",
       "stage_cmd"       => sub {
          SysExec("mkdir -p                                 $CFG{BUILD_DIR}/zm-mailbox/store-conf/");
          SysExec("rsync -az store-conf/conf                $CFG{BUILD_DIR}/zm-mailbox/store-conf/");
@@ -15,14 +15,12 @@
       "stage_cmd"   => undef,
    },
    {
-      "dir"             => "zm-zextras",
-      "make_targets"    => ["all"],
-      "deploy_pkg_into" => "zimbra-zextras",
-   },
-   {
+      # This repo can be removed and made independent of zm-zextras
+      # This cannot be done unless the packages from zm-timezones are pushed to public repo
+      # This is already excluded in CircleCI builds
       "dir"             => "zm-timezones",
       "ant_targets"     => ["pkg"],
-      "deploy_pkg_into" => "bundle",         # Change this to zimbra-foss once zimbra-core and zimbra-store are moved to repo as well.
+      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "junixsocket/junixsocket-native",
@@ -177,13 +175,8 @@
    },
    {
       "dir"         => "zm-web-client",
-      "ant_targets" => [ "prod-war", "jspc.build" ],
-      "stage_cmd"   => sub {
-         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-web-client/build/dist/jetty/webapps");
-         SysExec("cp -f build/dist/jetty/webapps/zimbra.war $CFG{BUILD_DIR}/zm-web-client/build/dist/jetty/webapps");
-         SysExec("cp -f -r build/dist/jetty/work $CFG{BUILD_DIR}/zm-web-client/build/dist/jetty");
-         SysExec("cp -f -r ../zm-web-client $CFG{BUILD_DIR}");
-      },
+      "ant_targets"     => ["pkg"],
+      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "zm-help",
@@ -230,12 +223,8 @@
    },
    {
       "dir"         => "zm-admin-console",
-      "ant_targets" => ["admin-war"],
-      "stage_cmd"   => sub {
-         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-admin-console/build/dist/jetty/webapps");
-         SysExec("cp -f build/dist/jetty/webapps/zimbraAdmin.war $CFG{BUILD_DIR}/zm-admin-console/build/dist/jetty/webapps");
-         SysExec("(cd .. && rsync -az --relative zm-admin-console/WebRoot/WEB-INF  $CFG{BUILD_DIR}/)");
-      },
+      "ant_targets" => ["pkg"],
+      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "zm-aspell",
@@ -348,10 +337,11 @@
    },
    {
       "dir"         => "zm-zcs-lib",
-      "ant_targets" => ["dist"],
+      "ant_targets" => ["dist", "pkg"],
       "stage_cmd"   => sub {
          SysExec("(cd .. && rsync -az --relative zm-zcs-lib $CFG{BUILD_DIR}/)");
       },
+      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "zm-jython",
@@ -387,6 +377,24 @@
       "ant_targets" => undef,
       "stage_cmd"   => sub {
          SysExec("cp -f -r ../zm-jetty-conf $CFG{BUILD_DIR}");
+      },
+   },
+   
+   {
+      "dir"         => "zm-oauth-social",
+      "ant_targets" => ["publish-local"],
+      "stage_cmd"   => sub {
+         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-oauth-social/build/dist");
+         SysExec("cp -f -rp build/zm-oauth-social-*.jar $CFG{BUILD_DIR}/zm-oauth-social/build/dist");
+      },
+   },
+   
+   {
+      "dir"         => "zm-gql",
+      "ant_targets" => ["publish-local"],
+      "stage_cmd"   => sub {
+         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-gql/build/dist");
+         SysExec("cp -f -rp build/zm-gql-*.jar $CFG{BUILD_DIR}/zm-gql/build/dist");
       },
    },
 );

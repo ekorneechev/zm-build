@@ -134,8 +134,15 @@ our $curVersion = "";
 my ($prevVersionMinor,$prevVersionMajor,$prevVersionMicro,$prevVersionBuild);
 my ($curVersionMinor,$curVersionMajor,$curVersionMicro,$curVersionMicroMicro,$curVersionType,$curVersionBuild);
 our $newinstall = 1;
+chomp (my $ldapSchemaVersion = do {
+    local $/ = undef;
+    open my $fh, "<", "/opt/zimbra/conf/zimbra-attrs-schema"
+        or die "could not open /opt/zimbra/conf/zimbra-attrs-schema: $!";
+    <$fh>;
+});
 
 my $ldapConfigured = 0;
+my $haveSetLdapSchemaVersion = 0;
 my $ldapRunning = 0;
 my $sqlConfigured = 0;
 my $sqlRunning = 0;
@@ -1234,6 +1241,9 @@ sub setLdapDefaults {
       if ($config{zimbraVersionCheckNotificationEmailFrom} eq "");
   }
 
+  $config{EphemeralBackendURL} = getLdapConfigValue("zimbraEphemeralBackendURL");
+  $config{USEEPHEMERALSTORE} = "yes" if ($config{EphemeralBackendURL} ne "");
+
   #
   # Load default COS
   #
@@ -1487,7 +1497,7 @@ sub setDefaults {
   } else {
     $config{mailboxd_keystore} = "/opt/zimbra/conf/keystore";
   }
-  $config{mailboxd_truststore} = "/opt/zimbra/common/lib/jvm/java/jre/lib/security/cacerts";
+  $config{mailboxd_truststore} = "/opt/zimbra/common/lib/jvm/java/lib/security/cacerts";
   $config{mailboxd_keystore_password} = genRandomPass();
   $config{mailboxd_truststore_password} = "changeit";
 
@@ -1773,6 +1783,7 @@ sub setDefaults {
   }
   if (isInstalled("zimbra-proxy")) {
     progress  "setting defaults for zimbra-proxy.\n" if $options{d};
+    $config{STRICTSERVERNAMEENABLED} = "TRUE";
     $config{IMAPPROXYPORT} = 143;
     $config{IMAPSSLPROXYPORT} = 993;
     $config{POPPROXYPORT} = 110;
@@ -1862,6 +1873,14 @@ sub getInstallStatus {
           $prevVersion = $curVersion;
         }
       }
+    }
+
+    if( !exists $installStatus{"zimbra-core"} )
+    {
+       progress ("\nERROR:\n");
+       progress ("zimbra-core does not seem to be installed.\n");
+       progress ("Please install required components first. Exiting.\n\n");
+       exit (1);
     }
 
     if ( ($installStatus{"zimbra-core"}{op} eq "INSTALLED") &&
@@ -3917,6 +3936,13 @@ sub createProxyMenu {
       "arg" => "MAILPROXY",
     };
     $i++;
+    $$lm{menuitems}{$i} = {
+      "prompt" => "Enable strict server name enforcement?",
+      "var" => \$config{STRICTSERVERNAMEENABLED},
+      "callback" => \&toggleYN,
+      "arg" => "STRICTSERVERNAMEENABLED",
+    };
+    $i++;
     if($config{MAILPROXY} eq "TRUE") {
        if(!isEnabled("zimbra-store")) {
           $$lm{menuitems}{$i} = {
@@ -5501,6 +5527,15 @@ sub configSetupLdap {
 
 }
 
+sub configLDAPSchemaVersion {
+  return if ($haveSetLdapSchemaVersion);
+  if (isEnabled("zimbra-ldap")) {
+    progress ("Updating zimbraLDAPSchemaVersion to version '$ldapSchemaVersion'\n");
+    setLdapGlobalConfig('zimbraLDAPSchemaVersion', $ldapSchemaVersion);
+    $haveSetLdapSchemaVersion = 1;
+  }
+}
+
 sub configSetupEphemeralBackend {
   if (exists($config{EphemeralBackendURL})) {
     setLdapGlobalConfig("zimbraEphemeralBackendURL", "$config{EphemeralBackendURL}")
@@ -6197,6 +6232,15 @@ sub setProxyBits {
 
 sub configSetProxyPrefs {
    if (isEnabled("zimbra-proxy")) {
+     if ($config{STRICTSERVERNAMEENABLED} eq "yes") {
+        progress("Enabling strict server name enforcement on $config{HOSTNAME}...");
+        runAsZimbra("$ZMPROV ms $config{HOSTNAME} zimbraReverseProxyStrictServerNameEnabled TRUE");
+        progress("done.\n");
+     } else {
+        progress("Disabling strict server name enforcement on $config{HOSTNAME}...");
+        runAsZimbra("$ZMPROV ms $config{HOSTNAME} zimbraReverseProxyStrictServerNameEnabled FALSE");
+        progress("done.\n");
+     }
      if ($config{MAILPROXY} eq "FALSE" && $config{HTTPPROXY} eq "FALSE") {
         $enabledPackages{"zimbra-proxy"} = "Disabled";
      } else {
@@ -6452,7 +6496,7 @@ sub zimletCleanup {
     return 1;
   } else {
     detail("ldap bind done for $ldap_dn");
-    $result = $ldap->search(base => $ldap_base, scope => 'one', filter => "(|(cn=convertd)(cn=hsm)(cn=hotbackup)(cn=zimbra_cert_manager)(cn=com_zimbra_search)(cn=zimbra_xmbxsearch)(cn=com_zimbra_domainadmin)(cn=com_zimbra_tinymce)(cn=com_zimbra_tasksreminder)(cn=com_zimbra_linkedin)(cn=com_zimbra_social)(cn=com_zimbra_dnd))", attrs => ['cn']);
+    $result = $ldap->search(base => $ldap_base, scope => 'one', filter => "(|(cn=convertd)(cn=hsm)(cn=hotbackup)(cn=zimbra_cert_manager)(cn=com_zimbra_search)(cn=zimbra_xmbxsearch)(cn=com_zimbra_domainadmin)(cn=com_zimbra_tinymce)(cn=com_zimbra_tasksreminder)(cn=com_zimbra_linkedin)(cn=com_zimbra_social)(cn=com_zimbra_dnd)(cn=com_zextras_chat_open))", attrs => ['cn']);
     return $result if ($result->code());
     detail("Processing ldap search results");
     foreach my $entry ($result->all_entries) {
@@ -7068,6 +7112,8 @@ sub applyConfig {
     configSetDNSCacheDefaults();
   }
 
+  configLDAPSchemaVersion();
+
   if (isEnabled("zimbra-ldap")) {
     configSetTimeZonePref();
 
@@ -7127,7 +7173,7 @@ sub applyConfig {
   setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionType', $curVersionType);
   setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionBuild', $curVersionBuild);
 
-  if ($newinstall && isEnabled("zimbra-imapd")) {
+  if (isEnabled("zimbra-imapd")) {
     configImap();
   }
 
@@ -7145,14 +7191,19 @@ sub applyConfig {
       }
     }
 
-    if (!isInstalled("zimbra-network-modules-ng")) {
-      main::progress("Disabling zimbraNetworkModulesNGEnabled \n");
+    if (isInstalled("zimbra-network-modules-ng")) {
+       if ($prevVersionMajor <= 8 && $prevVersionMinor <= 7) {
+        setLdapServerConfig($config{HOSTNAME}, 'zimbraNetworkModulesNGEnabled', 'TRUE');
+        }
+    }
+    else {
       setLdapServerConfig($config{HOSTNAME}, 'zimbraNetworkModulesNGEnabled', 'FALSE');
     }
 
-    if (!isInstalled("zimbra-network-modules-ng") || (!$newinstall && prevVersionBelow880())) {
-      main::progress("Disabling zimbraNetworkMobileNGEnabled \n");
-      setLdapServerConfig($config{HOSTNAME}, 'zimbraNetworkMobileNGEnabled', 'FALSE');
+    if (isInstalled("zimbra-network-modules-ng") && $newinstall) {
+      main::progress("Enabling zimbra network NG modules features.\n");
+      setLdapServerConfig($config{HOSTNAME}, 'zimbraNetworkMobileNGEnabled', 'TRUE');
+      setLdapServerConfig($config{HOSTNAME}, 'zimbraNetworkAdminNGEnabled', 'TRUE');
     }
 
     progress ( "Starting servers..." );
@@ -7244,9 +7295,34 @@ sub setupSyslog {
   configLog("setupSyslog");
 }
 
+sub zxsuiteIsAvailable {
+  my $checkNGstatus = 0;
+  my $trying = 0;
+  my $output;
+  my $NGbackup;
+  progress("Checking if the NG started running...");
+  while (( $checkNGstatus != 1 ) && ( $trying < 7 )) {
+        $output = qx(/opt/zimbra/bin/zxsuite backup getBackupInfo);
+        last if ($output =~ /valid/);
+        detail ("retry ".  ++$trying);
+        sleep 5;
+  }
+  progress("done. \n");
+  if ((-f "/opt/zimbra/bin/zxsuite") && ($output =~ /valid(.*)true/ )) {
+     $NGbackup = "true";
+     detail("NG backup is already initialized because /opt/zimbra/bin/zxsuite backup getBackupInfo valid has value: $NGbackup \n");
+  } else {
+    $NGbackup = "false";
+    detail("Modifying the crontab with default schedule because \"/opt/zimbra/bin/zxsuite backup getBackupInfo\" valid has value: $NGbackup \n");
+  }
+  return $NGbackup
+}
+
+
 sub setupCrontab {
   my @backupSchedule=();
   my $nohsm=1;
+  my $NG_backup = zxsuiteIsAvailable();
   progress ("Setting up zimbra crontab...");
   if ( -x "/opt/zimbra/bin/zmschedulebackup") {
     detail("Getting current backup schedule in restorable format.");
@@ -7330,7 +7406,7 @@ sub setupCrontab {
         runAsZimbra("/opt/zimbra/bin/zmschedulebackup -A $backupSchedule[$i]");
       }
     }
-  } elsif ( -f "/opt/zimbra/bin/zmschedulebackup" && scalar @backupSchedule == 0 && !$newinstall && $nohsm) {
+  } elsif ( -f "/opt/zimbra/bin/zmschedulebackup" && scalar @backupSchedule == 0 && !$newinstall && $nohsm && $NG_backup == "false") {
     detail("crontab: No backup schedule found: installing default schedule.");
     qx($SU "/opt/zimbra/bin/zmschedulebackup -D" >> $logfile 2>&1);
   }

@@ -72,7 +72,7 @@ isFQDN() {
     return
   fi
 
-  NF=`echo $1 | awk -F. '{printf NF}'`
+  NF=`echo $1 | awk -F. '{print NF}'`
   if [ $NF -ge 2 ]; then
     echo 1
   else
@@ -82,13 +82,13 @@ isFQDN() {
 
 verifyIPv6() {
     IP=$1
-    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 8)) { RES = 1 } printf RES }'`
+    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 8)) { RES = 1 } print RES }'`
     return ${BAD_IP}
 }
 
 verifyMixedIPv6() {
     IP=$1
-    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 6)) { RES = 1 } printf RES }'`
+    BAD_IP=`echo $IP | awk -F: '{ RES=0; SHORT=0; LSHORT=0; if (NF > 8) { RES=1 } else { for (BLK = 1; BLK <= NF; BLK++) { if ($BLK !~ /^[0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$|^[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$/) { if ($BLK == "") { if (SHORT > 0) { if ((BLK - LSHORT) != 1) { RES = 1 } } SHORT++; LSHORT = BLK } else { RES = 1 } } } } if ((NF == 3) && ($2 != "")) { RES = 1 } if (((SHORT > 2) && (NF != 3)) || ((SHORT == 2) && (!(($2 == "") || ($(NF-1) == ""))))) { RES = 1 } if ((NF - SHORT) > 6 ) { RES = 1 } if ((SHORT == 0) && (NF < 6)) { RES = 1 } print RES }'`
     return ${BAD_IP}
 }
 
@@ -99,7 +99,7 @@ verifyIPv4() {
     then
         BAD_IP=1
     else
-        BAD_IP=`echo $IP | awk -F. 'BEGIN {BAD_OCTET=0} { for (OCTET = 1; OCTET <= 4; OCTET++) { if (($OCTET !~ /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/) || ((OCTET == 1) && ($OCTET == "0"))) { BAD_OCTET=1 } } } END { printf BAD_OCTET }'`
+        BAD_IP=`echo $IP | awk -F. 'BEGIN {BAD_OCTET=0} { for (OCTET = 1; OCTET <= 4; OCTET++) { if (($OCTET !~ /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/) || ((OCTET == 1) && ($OCTET == "0"))) { BAD_OCTET=1 } } } END { print BAD_OCTET }'`
     fi
     return ${BAD_IP}
 }
@@ -218,7 +218,7 @@ askYN() {
 
   while [ 1 ]; do
     ask "$PROMPT" "$DEFAULT"
-    response=$(perl -e "printf lc(\"$response\");")
+    response=$(perl -e "print lc(\"$response\");")
     if [ -z $response ]; then
       :
     else
@@ -254,6 +254,26 @@ askInt() {
   done
 }
 
+askInstallPkgYN() {
+  PROMPT="$1"
+  REQUIRE_STORE="$2"
+  YES_STORE_DEFAULT="$3"
+  NO_STORE_DEFAULT="$4"
+  if [ "$STORE_SELECTED" = "yes" ]; then
+    askYN "$PROMPT" "$YES_STORE_DEFAULT"
+  else
+    if [ "$REQUIRE_STORE" = "yes" ]; then
+      askYN "$PROMPT" "$NO_STORE_DEFAULT"
+    fi
+  fi
+}
+
+ifStoreSelectedY() {
+  if [ "$STORE_SELECTED" = "yes" ]; then
+    response="yes"
+  fi
+}
+
 checkUser() {
   user=$1
   if [ x`whoami` != x$user ]; then
@@ -266,7 +286,7 @@ checkMySQLConfig() {
   isInstalled zimbra-store
   if [ x$PKGINSTALLED != "x" ]; then
     if [ -f "/opt/zimbra/conf/my.cnf" ]; then
-      BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { printf $3 } }' /opt/zimbra/conf/my.cnf`
+      BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { print $3 } }' /opt/zimbra/conf/my.cnf`
       while [ "${BIND_ADDR}x" != "127.0.0.1x" -a "${BIND_ADDR}x" != "localhostx" ]; do
         echo "The MySQL bind address is currently not set to \"localhost\" or \"127.0.0.1\".  Due to a"
         echo "MySQL bug (#61713), the MySQL bind address must be set to \"127.0.0.1\".  Please correct"
@@ -275,7 +295,7 @@ checkMySQLConfig() {
         if [ $response = "no" ]; then
           break
         fi
-        BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { printf $3 } }' /opt/zimbra/conf/my.cnf`
+        BIND_ADDR=`awk '{ if ( $1 ~ /^bind-address$/ ) { print $3 } }' /opt/zimbra/conf/my.cnf`
       done
       if [ "${BIND_ADDR}x" != "127.0.0.1x" -a "${BIND_ADDR}x" != "localhostx" ]; then
         echo ""
@@ -388,8 +408,8 @@ checkUbuntuRelease() {
     return
   fi
 
-  if [ "x$DISTRIB_ID" = "xUbuntu" -a "x$DISTRIB_RELEASE" != "x12.04" -a "x$DISTRIB_RELEASE" != "x14.04" -a "x$DISTRIB_RELEASE" != "x16.04" ]; then
-    echo "WARNING: ZCS is currently only supported on Ubuntu Server 12.04, 14.04 and 16.04 LTS."
+  if [ "x$DISTRIB_ID" = "xUbuntu" -a "x$DISTRIB_RELEASE" != "x12.04" -a "x$DISTRIB_RELEASE" != "x14.04" -a "x$DISTRIB_RELEASE" != "x16.04" -a "x$DISTRIB_RELEASE" != "x18.04" ]; then
+    echo "WARNING: ZCS is currently only supported on Ubuntu Server 12.04, 14.04, 16.04 and 18.04 LTS."
     echo "You are attempting to install on $DISTRIB_DESCRIPTION which may not work."
     echo "Support will not be provided if you choose to continue."
     echo ""
@@ -477,8 +497,8 @@ EOF
       exit 1
     fi
 
-    H_LINE=`sed -e 's/#.*//' /etc/hosts | awk '{ for (i = 2; i <=NF; i++) { if ($i ~ /^'$HOSTNAME'$/) { printf $0; } } }'`
-    IP=`echo ${H_LINE} | awk '{ printf $1 }'`
+    H_LINE=`sed -e 's/#.*//' /etc/hosts | awk '{ for (i = 2; i <=NF; i++) { if ($i ~ /^'$HOSTNAME'$/) { print $0; } } }'`
+    IP=`echo ${H_LINE} | awk '{ print $1 }'`
     INVALID_IP=0
 
     if [ "`echo ${IP} | tr -d '[0-9a-fA-F:]'`" = "" ]
@@ -513,7 +533,7 @@ EOF
     else
         INVALID_IP=1
     fi
-    if [ `echo ${H_LINE} | awk '{ printf NF }'` -lt 2 -o ${INVALID_IP} -eq 1 ]
+    if [ `echo ${H_LINE} | awk '{ print NF }'` -lt 2 -o ${INVALID_IP} -eq 1 ]
     then
         echo ""
         echo "  ERROR: Installation can not proceeed.  Please fix your /etc/hosts file"
@@ -534,9 +554,9 @@ EOF
   # limitation of ext3
   if [ -d "/opt/zimbra/db/data" ]; then
     echo "Checking current number of databases..."
-    FS_TYPE=`df -T /opt/zimbra/db/data | awk '{ if (NR == 2) { printf $2 } }'`
+    FS_TYPE=`df -T /opt/zimbra/db/data | awk '{ if (NR == 2) { print $2 } }'`
     if [ "${FS_TYPE}"x = "ext3"x ]; then
-      DBCOUNT=`find /opt/zimbra/db/data -type d | wc -l | awk '{if ($NF-1 >= 31998) printf $NF-1}'`
+      DBCOUNT=`find /opt/zimbra/db/data -type d | wc -l | awk '{if ($NF-1 >= 31998) print $NF-1}'`
       if [ x"$DBCOUNT" != "x" ]; then
         echo "You have $DBCOUNT databases on an ext3 FileSystem, which is at"
         echo "or over the limit of 31998 databases. You will need to delete at"
@@ -558,14 +578,14 @@ checkRequiredSpace() {
   # /opt/zimbra must have 500MB for upgrades
   GOOD=yes
   echo "Checking required space for zimbra-core"
-  TMPKB=`df -Pk /tmp | tail -1 | awk '{printf $4}'`
+  TMPKB=`df -Pk /tmp | tail -1 | awk '{print $4}'`
   AVAIL=$(($TMPKB / 1024))
   if [ $AVAIL -lt  100 ]; then
     echo "/tmp must have at least 100MB of availble space to install."
     echo "${AVAIL}MB is not enough space to install ZCS."
     GOOD=no
   fi
-  ZIMBRA=`df -Pk /opt/zimbra | tail -1 | awk '{printf $4}'`
+  ZIMBRA=`df -Pk /opt/zimbra | tail -1 | awk '{print $4}'`
   if [ $UPGRADE = "yes" ]; then
     AVAIL=$(($ZIMBRA / 1024))
     if [ $AVAIL -lt 500 ]; then
@@ -654,6 +674,16 @@ checkExistingInstall() {
     fi
   done
 
+  for i in $CHAT_PACKAGES; do
+    isInstalled $i
+    if [ x$PKGINSTALLED != "x" ]; then
+      echo "    $i...FOUND $PKGINSTALLED"
+      INSTALLED_PACKAGES="$INSTALLED_PACKAGES $i"
+    else
+      echo "    $i...NOT FOUND"
+    fi
+  done
+
   for i in $PACKAGES $CORE_PACKAGES; do
     echo -n "    $i..."
     isInstalled $i
@@ -699,10 +729,10 @@ determineVersionType() {
     else
       ZMTYPE_CURRENT="FOSS"
     fi
-    ZM_CUR_MAJOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$maj\n"')
-    ZM_CUR_MINOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$min\n"')
-    ZM_CUR_MICRO=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$mic\n"')
-    ZM_CUR_BUILD=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); printf "$build\n";')
+    ZM_CUR_MAJOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$maj\n"')
+    ZM_CUR_MINOR=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$min\n"')
+    ZM_CUR_MICRO=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$mic\n"')
+    ZM_CUR_BUILD=$(perl -e '$v=$ENV{ZMVERSION_CURRENT}; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); print "$build\n";')
   fi
 
   # if we are removing the install we don't need the rest of the info
@@ -713,11 +743,11 @@ determineVersionType() {
   # need way to determine type for other package types
   ZMTYPE_INSTALLABLE="$(cat ${MYDIR}/.BUILD_TYPE)"
 
-  ZM_INST_MAJOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$maj\n"')
-  ZM_INST_MINOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$min\n"')
-  ZM_INST_MICRO=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; printf "$mic\n"')
-  ZM_INST_RTYPE=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); printf "$rtype\n";')
-  ZM_INST_BUILD=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); printf "$build\n";')
+  ZM_INST_MAJOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$maj\n"')
+  ZM_INST_MINOR=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$min\n"')
+  ZM_INST_MICRO=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic) = $v =~ m/^(\d+)\.(\d+)\.(\d+)/; print "$mic\n"')
+  ZM_INST_RTYPE=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); print "$rtype\n";')
+  ZM_INST_BUILD=$(perl -e '$v=glob("packages/zimbra-core*"); $v =~ s/^packages\/zimbra-core[-_]//; $v =~ s/^(\d+\.\d+\.[^_]*_[^_]+_[^.]+).*/\1/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/^(\d+)\.(\d+)\.(\d+)\.(\w+)\.(\d+)/; ($maj,$min,$mic,$rtype,$build) = $v =~ m/(\d+)\.(\d+)\.(\d+)_(\w+[^_])_(\d+)/ if ($rtype eq ""); print "$build\n";')
 
   if [ x"$AUTOINSTALL" = "xyes" ]; then
     return
@@ -961,7 +991,7 @@ verifyLicenseActivationServer() {
     elif [ ${ZM_CUR_MAJOR} -gt "7" ]; then
       /opt/zimbra/bin/zmlicense --ping > /dev/null 2>&1
     else
-      /opt/zimbra/java/bin/java -XX:ErrorFile=/opt/zimbra/log -client -Xmx256m -Dzimbra.home=/opt/zimbra -Djava.library.path=/opt/zimbra/lib -Djava.ext.dirs=/opt/zimbra/java/jre/lib/ext:/opt/zimbra/lib/jars -classpath ./lib/jars/zimbra-license-tools.jar com.zimbra.cs.license.LicenseCLI --ping > /dev/null 2>&1
+      /opt/zimbra/java/bin/java -XX:ErrorFile=/opt/zimbra/log -client -Xmx256m -Dzimbra.home=/opt/zimbra -Djava.library.path=/opt/zimbra/lib  -classpath ./lib/jars/zimbra-license-tools.jar:/opt/zimbra/lib/jars/* com.zimbra.cs.license.LicenseCLI --ping > /dev/null 2>&1
     fi
     if [ $? != 0 ]; then
       activationWarning
@@ -1064,14 +1094,14 @@ verifyLicenseAvailable() {
   if [ x"$licenseCheck" = "xlicense not installed" -o x"$licenseCheck" = "x" ]; then
     if [ -f "/opt/zimbra/conf/ZCSLicense.xml" ]; then
       licenseCheck="license is OK"
-      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense.xml | grep AccountsLimit | head -1  | awk '{printf $3}' | awk -F= '{printf $2}' | awk -F\" '{printf $2}'`
-      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {printf $4 } }'`
-      licenseType=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {printf $4 } }'`
+      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense.xml | grep AccountsLimit | head -1  | awk '{print $3}' | awk -F= '{print $2}' | awk -F\" '{print $2}'`
+      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {print $4 } }'`
+      licenseType=`cat /opt/zimbra/conf/ZCSLicense.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {print $4 } }'`
     elif [ -f "/opt/zimbra/conf/ZCSLicense-Trial.xml" ]; then
       licenseCheck="license is OK"
-      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | grep AccountsLimit | head -1  | awk '{printf $3}' | awk -F= '{printf $2}' | awk -F\" '{printf $2}'`
-      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {printf $4 } }'`
-      licenseType=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {printf $4 } }'`
+      licensedUsers=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | grep AccountsLimit | head -1  | awk '{print $3}' | awk -F= '{print $2}' | awk -F\" '{print $2}'`
+      licenseValidUntil=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^ValidUntil$/) {print $4 } }'`
+      licenseType=`cat /opt/zimbra/conf/ZCSLicense-Trial.xml | awk -F\" '{ if ($2 ~ /^InstallType$/) {print $4 } }'`
     else
       echo "ERROR: The ZCS Network upgrade requires a license to be located in"
       echo "/opt/zimbra/conf/ZCSLicense.xml or a license previously installed."
@@ -1244,11 +1274,11 @@ checkUserInfo() {
   fi
   if [ -x /usr/bin/getent ]
   then
-    ZH=`getent passwd zimbra | awk -F: '{ printf $6 }'`
-    ZS=`getent passwd zimbra | awk -F: '{ printf $7 }' | sed -e s'|.*/||'`
+    ZH=`getent passwd zimbra | awk -F: '{ print $6 }'`
+    ZS=`getent passwd zimbra | awk -F: '{ print $7 }' | sed -e s'|.*/||'`
   else
-    ZH=`awk -F: '/^zimbra:/ {printf $6}' /etc/passwd`
-    ZS=`awk -F: '/^zimbra:/ {printf $7}' /etc/passwd | sed -e s'|.*/||'`
+    ZH=`awk -F: '/^zimbra:/ {print $6}' /etc/passwd`
+    ZS=`awk -F: '/^zimbra:/ {print $7}' /etc/passwd | sed -e s'|.*/||'`
   fi
   if [ x$ZH != "x/opt/zimbra" ]; then
     echo "Error - zimbra user exists with incorrect home directory: $ZH"
@@ -1274,7 +1304,7 @@ shutDownSystem() {
   local OS=$(uname -s | tr A-Z a-z)
   if [ x"$OS" = "xlinux" ]; then
     if [ -x /bin/ps -a -x  /usr/bin/awk -a -x /usr/bin/xargs ]; then
-      /bin/ps -eFw | /usr/bin/awk '{ if ($1 == "zimbra" && $3 == "1") printf $2 }' | /usr/bin/xargs kill -9 > /dev/null 2>&1
+      /bin/ps -eFw | /usr/bin/awk '{ if ($1 == "zimbra" && $3 == "1") print $2 }' | /usr/bin/xargs kill -9 > /dev/null 2>&1
     fi
   fi
 }
@@ -1546,7 +1576,7 @@ saveExistingConfig() {
 
   if [ -x "/opt/zimbra/bin/zmlocalconfig" ]; then
     runAsZimbra "zmlocalconfig -e zimbra_java_home=/opt/zimbra/common/lib/jvm/java"
-    runAsZimbra "zmlocalconfig -e mailboxd_truststore=/opt/zimbra/common/lib/jvm/java/jre/lib/security/cacerts"
+    runAsZimbra "zmlocalconfig -e mailboxd_truststore=/opt/zimbra/common/lib/jvm/java/lib/security/cacerts"
   fi
   if [ ! -d "$SAVEDIR" ]; then
     mkdir -p $SAVEDIR
@@ -1570,10 +1600,10 @@ saveExistingConfig() {
   if [ -f "/opt/zimbra/conf/localconfig.xml" ]; then
     cp -f /opt/zimbra/conf/localconfig.xml $SAVEDIR/localconfig.xml
   fi
-  if [ -f "/opt/zimbra/common/lib/jvm/java/jre/lib/security/cacerts" ]; then
-    cp -f /opt/zimbra/common/lib/jvm/java/jre/lib/security/cacerts $SAVEDIR
-  elif [ -f "/opt/zimbra/java/jre/lib/security/cacerts" ]; then
-    cp -f /opt/zimbra/java/jre/lib/security/cacerts $SAVEDIR
+  if [ -f "/opt/zimbra/common/lib/jvm/java/lib/security/cacerts" ]; then
+    cp -f /opt/zimbra/common/lib/jvm/java/lib/security/cacerts $SAVEDIR
+  elif [ -f "/opt/zimbra/java/lib/security/cacerts" ]; then
+    cp -f /opt/zimbra/java/lib/security/cacerts $SAVEDIR
   fi
   if [ -f "/opt/zimbra/jetty/etc/keystore" ]; then
     cp -f /opt/zimbra/jetty/etc/keystore $SAVEDIR
@@ -1626,6 +1656,12 @@ saveExistingConfig() {
 findUbuntuExternalPackageDependencies() {
   # Handle external packages like logwatch, mailutils depends on zimbra-mta.
   if [ $INSTALLED = "yes" -a $ISUBUNTU = "true" ]; then
+    for i in $CHAT_PACKAGES; do
+      isInstalled $i
+     if [ x$PKGINSTALLED != "x" ]; then
+      INSTALLED_PACKAGES="$INSTALLED_PACKAGES $i"
+     fi
+    done
     $PACKAGERMSIMULATE $INSTALLED_PACKAGES > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       EXTPACKAGESTMP=`$PACKAGERMSIMULATE $INSTALLED_PACKAGES 2>&1 | grep " depends on " | cut -d' ' -f2 | grep -v zimbra`
@@ -1708,6 +1744,41 @@ removeExistingPackages() {
         echo "done"
       fi
 
+      isInstalled "zimbra-talk"
+      if [ x$PKGINSTALLED != "x" ]; then
+        echo -n "   zimbra-talk..."
+        $PACKAGERM zimbra-talk >/dev/null 2>&1
+        echo "done"
+      fi
+
+      isInstalled "zimbra-patch"
+      if [ x$PKGINSTALLED != "x" ]; then
+        echo -n "   zimbra-patch..."
+        $PACKAGERM zimbra-patch >/dev/null 2>&1
+        echo "done"
+      fi
+
+      isInstalled "zimbra-proxy-patch"
+      if [ x$PKGINSTALLED != "x" ]; then
+        echo -n "   zimbra-proxy-patch..."
+        $PACKAGERM zimbra-proxy-patch >/dev/null 2>&1
+        echo "done"
+      fi
+
+      isInstalled "zimbra-mta-patch"
+      if [ x$PKGINSTALLED != "x" ]; then
+        echo -n "   zimbra-mta-patch..."
+        $PACKAGERM zimbra-mta-patch >/dev/null 2>&1
+        echo "done"
+      fi
+
+      isInstalled "zimbra-zco"
+      if [ x$PKGINSTALLED != "x" ]; then
+        echo -n "   zimbra-zco..."
+        $PACKAGERM zimbra-zco >/dev/null 2>&1
+        echo "done"
+      fi
+
       isInstalled "zimbra-network-modules-ng"
       if [ x$PKGINSTALLED != "x" ]; then
         echo -n "   zimbra-network-modules-ng..."
@@ -1770,6 +1841,23 @@ removeExistingPackages() {
   done
 }
 
+removeChatIfInstalled() {
+   for i in $INSTALL_PACKAGES; do
+     if [ x$i = "xzimbra-talk" ]; then
+        echo ""
+        echo "Checking zimbra-chat already installed or not..."
+       isInstalled "zimbra-chat"
+        if [ x$PKGINSTALLED != "x" ]; then
+          echo -n "   zimbra-chat FOUND..."
+          echo ""
+          echo -n "   Removing zimbra-chat..."
+          $PACKAGERM zimbra-chat >/dev/null 2>&1
+          echo "done"
+        fi
+      fi
+    done
+}
+
 removeExistingInstall() {
   if [ $INSTALLED = "yes" ]; then
     echo ""
@@ -1814,8 +1902,15 @@ removeExistingInstall() {
         LD_LIBRARY_PATH=$OLD_LDR_PATH
       fi
     fi
+    isInstalled "zimbra-zco"
+    if [ x$PKGINSTALLED != "x" ]; then
+      echo -n "Removing stale package zimbra-zco while upgrade..."
+      $PACKAGERM zimbra-zco >/dev/null 2>&1
+      echo "done"
+    fi
     if [ "$UPGRADE" = "yes" -a "$POST87UPGRADE" = "true" -a "$FORCE_UPGRADE" != "yes" -a "$ZM_CUR_BUILD" != "$ZM_INST_BUILD" ]; then
       echo "Upgrading the remote packages"
+      removeChatIfInstalled
     else
       removeExistingPackages
     fi
@@ -1848,7 +1943,7 @@ removeExistingInstall() {
       echo ""
       echo "Removing /opt/zimbra"
       umount /opt/zimbra/amavisd/tmp > /dev/null 2>&1
-      MOUNTPOINTS=`mount | awk '{printf $3}' | grep /opt/zimbra/`
+      MOUNTPOINTS=`mount | awk '{print $3}' | grep /opt/zimbra/`
       for mp in $MOUNTPOINTS; do
         if [ x$mp != "x/opt/zimbra" ]; then
           /bin/rm -rf ${mp}/*
@@ -2164,7 +2259,9 @@ configurePackageServer() {
     fi
     echo $PLATFORM | egrep -q "UBUNTU|DEBIAN"
     if [ $? = 0 ]; then
-      if [ $PLATFORM = "UBUNTU16_64" ]; then
+      if [ $PLATFORM = "UBUNTU18_64" ]; then
+        repo="bionic"
+      elif [ $PLATFORM = "UBUNTU16_64" ]; then
         repo="xenial"
       elif [ $PLATFORM = "UBUNTU14_64" ]; then
         repo="trusty"
@@ -2177,7 +2274,7 @@ configurePackageServer() {
       apt-key list | grep -w 9BE6ED79 >/dev/null
       if [ $? -ne 0 ]; then
         echo "Importing Zimbra GPG key"
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9BE6ED79 >>$LOGFILE 2>&1
+        apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 9BE6ED79 >>$LOGFILE 2>&1
         if [ $? -ne 0 ]; then
           echo "ERROR: Unable to retrive Zimbra GPG key for package validation"
           echo "Please fix system to allow normal package installation before proceeding"
@@ -2194,8 +2291,14 @@ configurePackageServer() {
       fi
 cat > /etc/apt/sources.list.d/zimbra.list << EOF
 deb     [arch=amd64] https://$PACKAGE_SERVER/apt/87 $repo zimbra
+deb     [arch=amd64] https://$PACKAGE_SERVER/apt/8815 $repo zimbra
 deb-src [arch=amd64] https://$PACKAGE_SERVER/apt/87 $repo zimbra
 EOF
+if [ x"$ZMTYPE_INSTALLABLE" = "xNETWORK" ]; then
+cat >> /etc/apt/sources.list.d/zimbra.list << EOF
+deb     [arch=amd64] https://$PACKAGE_SERVER/apt/8815-ne $repo zimbra
+EOF
+fi
       apt-get update >>$LOGFILE 2>&1
       if [ $? -ne 0 ]; then
         echo "ERROR: Unable to install packages via apt-get"
@@ -2229,9 +2332,27 @@ name=Zimbra RPM Repository
 baseurl=https://$PACKAGE_SERVER/rpm/87/$repo
 gpgcheck=1
 enabled=1
+[zimbra-8815-oss]
+name=Zimbra New RPM Repository
+baseurl=https://$PACKAGE_SERVER/rpm/8815/$repo
+gpgcheck=1
+enabled=1
 EOF
       yum --disablerepo=* --enablerepo=zimbra clean metadata >>$LOGFILE 2>&1
       yum check-update --disablerepo=* --enablerepo=zimbra --noplugins >>$LOGFILE 2>&1
+      yum --disablerepo=* --enablerepo=zimbra-8815-oss clean metadata >>$LOGFILE 2>&1
+      yum check-update --disablerepo=* --enablerepo=zimbra-8815-oss --noplugins >>$LOGFILE 2>&1
+if [ x"$ZMTYPE_INSTALLABLE" = "xNETWORK" ]; then
+cat >> /etc/yum.repos.d/zimbra.repo <<EOF
+[zimbra-8815-network]
+name=Zimbra New RPM Repository
+baseurl=https://$PACKAGE_SERVER/rpm/8815-ne/$repo
+gpgcheck=1
+enabled=1
+EOF
+      yum --disablerepo=* --enablerepo=zimbra-8815-network clean metadata >>$LOGFILE 2>&1
+      yum check-update --disablerepo=* --enablerepo=zimbra-8815-network --noplugins >>$LOGFILE 2>&1
+fi
       if [ $? -ne 0 -a $? -ne 100 ]; then
         echo "ERROR: yum check-update failed"
         echo "Please validate ability to install packages"
@@ -2239,6 +2360,23 @@ EOF
       fi
     fi
   fi
+}
+
+getChatOrTalkPackage() {
+ if [ $response = "yes" ]; then
+    askInstallPkgYN "Install zimbra-talk" "yes" "Y" "N"
+    if [ $response = "yes" ]; then
+       INSTALL_PACKAGES="$INSTALL_PACKAGES zimbra-talk"
+    elif [ $response = "no" ]; then
+       response="yes"
+    fi
+  elif [ $response = "no" ]; then
+    askInstallPkgYN "Install zimbra-chat" "yes" "Y" "N"
+    if [ $response = "yes" ]; then
+       INSTALL_PACKAGES="$INSTALL_PACKAGES zimbra-chat"
+       response="no"
+    fi
+ fi
 }
 
 getInstallPackages() {
@@ -2256,6 +2394,11 @@ getInstallPackages() {
   LOGGER_SELECTED="no"
   STORE_SELECTED="no"
   MTA_SELECTED="no"
+  PROXY_SELECTED="no"
+
+  if [ x"$ZMTYPE_INSTALLABLE" = "xFOSS" ]; then
+     AVAILABLE_PACKAGES="$AVAILABLE_PACKAGES zimbra-chat"
+  fi
 
   for i in $AVAILABLE_PACKAGES; do
     if [ $i = "zimbra-core" ]; then
@@ -2269,6 +2412,12 @@ getInstallPackages() {
       echo $INSTALLED_PACKAGES | grep $i > /dev/null 2>&1
       if [ $? = 0 ]; then
         echo "    Upgrading $i"
+        if [ $i = "zimbra-network-modules-ng" ]; then
+            askInstallPkgYN "Install zimbra-talk" "yes" "Y" "N"
+            if [ $response = "yes" ]; then
+                INSTALL_PACKAGES="$INSTALL_PACKAGES zimbra-talk"
+            fi
+        fi
         if [ $i = "zimbra-mta" ]; then
           CONFLICTS="no"
           for j in $CONFLICT_PACKAGES; do
@@ -2299,67 +2448,68 @@ getInstallPackages() {
           STORE_SELECTED="yes"
         elif [ $i = "zimbra-mta" ]; then
           MTA_SELECTED="yes"
+        elif [ $i = "zimbra-proxy" ]; then
+          PROXY_SELECTED="yes"
         fi
         continue
       fi
     fi
 
-    if [ $UPGRADE = "yes" ]; then
+    # askInstallPkgYN args : PROMPT REQUIRE_STORE=yes|no YES_STORE_DEFAULT=Y|N NO_STORE_DEFAULT=Y|N
 
+    if [ $i = "zimbra-license-tools" ]; then
+      response="yes"
+    elif [ $i = "zimbra-patch" ]; then
+      ifStoreSelectedY
+    elif [ $i = "zimbra-mta-patch" ]; then
+      response="$MTA_SELECTED"
+    elif [ $i = "zimbra-proxy-patch" ]; then
+      response="$PROXY_SELECTED"
+    elif [ $i = "zimbra-license-extension" ]; then
+      ifStoreSelectedY
+    elif [ $i = "zimbra-network-store" ]; then
+      ifStoreSelectedY
+    elif [ $UPGRADE = "yes" ]; then
       if [ $i = "zimbra-archiving" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "N"
-	fi
-      
+        askInstallPkgYN "Install $i" "yes" "N" "N"
       elif [ $i = "zimbra-chat" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "N"
+	if [ $STORE_SELECTED = "yes" ]; then
+          askInstallPkgYN "Install $i" "yes" "N" "N"
 	fi
-
       elif [ $i = "zimbra-drive" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "N"
+	if [ $STORE_SELECTED = "yes" ]; then
+          askInstallPkgYN "Install $i" "yes" "N" "N"
 	fi
-
+      elif [ $i = "zimbra-imapd" ]; then
+        askInstallPkgYN "Install $i (BETA - for evaluation only)" "no" "N" "N"
       elif [ $i = "zimbra-network-modules-ng" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "N"
+	if [ $STORE_SELECTED = "yes" ]; then
+          askInstallPkgYN "Install $i" "yes" "N" "N"
+	  getChatOrTalkPackage
 	fi
-
       else
         askYN "Install $i" "N"
       fi
-      
     else
-
       if [ $i = "zimbra-archiving" ]; then
-        # only prompt to install archiving if zimbra-store is selected
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "N"
-        fi
-
+        askInstallPkgYN "Install $i" "yes" "N" "N"
       elif [ $i = "zimbra-convertd" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "Y"
-        else
-          askYN "Install $i" "N"
-        fi
-
+        askInstallPkgYN "Install $i" "no" "Y" "N"
       elif [ $i = "zimbra-chat" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "Y"
-        fi
-
+	if [ $STORE_SELECTED = "yes" ]; then
+          askInstallPkgYN "Install $i" "yes" "Y" "N"
+	fi
       elif [ $i = "zimbra-drive" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "Y"
-        fi
-
+	if [ $STORE_SELECTED = "yes" ]; then
+          askInstallPkgYN "Install $i" "yes" "Y" "N"
+	fi
+      elif [ $i = "zimbra-imapd" ]; then
+        askInstallPkgYN "Install $i (BETA - for evaluation only)" "no" "N" "N"
       elif [ $i = "zimbra-network-modules-ng" ]; then
-        if [ $STORE_SELECTED = "yes" ]; then
-          askYN "Install $i" "Y"
-        fi
-
+	if [ $STORE_SELECTED = "yes" ]; then
+          askInstallPkgYN "Install $i" "yes" "Y" "N"
+	  getChatOrTalkPackage
+	fi
       elif [ $i = "zimbra-dnscache" ]; then
         if [ $MTA_SELECTED = "yes" ]; then
           askYN "Install $i" "Y"
@@ -2380,8 +2530,10 @@ getInstallPackages() {
         APACHE_SELECTED="yes"
       elif [ $i = "zimbra-mta" ]; then
         MTA_SELECTED="yes"
+      elif [ $i = "zimbra-proxy" ]; then
+        PROXY_SELECTED="yes"
       fi
-      
+
       if [ $i = "zimbra-network-modules-ng" ]; then
           echo "###WARNING###"
           echo ""
@@ -2448,6 +2600,7 @@ getInstallPackages() {
     echo "    $i"
   done
 }
+
 
 deleteWebApp() {
   WEBAPPNAME=$1
@@ -2668,16 +2821,20 @@ getPlatformVars() {
     REPOINST='apt-get install -y'
     PACKAGEDOWNLOAD='apt-get --download-only install -y --force-yes'
     REPORM='apt-get -y --purge purge'
-    PACKAGEINST='dpkg -i'
+    PACKAGEINST='dpkg -i --auto-deconfigure'
     PACKAGERM='dpkg --purge'
     PACKAGERMSIMULATE='dpkg --purge --dry-run'
     PACKAGEQUERY='dpkg -s'
     PACKAGEEXT='deb'
     PACKAGEVERSION="dpkg-query -W -f \${Version}"
     CONFLICT_PACKAGES="mail-transport-agent"
-    if [ $PLATFORM = "UBUNTU12_64" -o $PLATFORM = "UBUNTU14_64" -o $PLATFORM = "UBUNTU16_64" ]; then
+    if [ $PLATFORM = "UBUNTU12_64" -o $PLATFORM = "UBUNTU14_64" -o $PLATFORM = "UBUNTU16_64" -o $PLATFORM = "UBUNTU18_64" ]; then
       STORE_PACKAGES="libreoffice"
     fi
+    DumpFileDetailsFromPackage() {
+       local pkg_n="$1"; shift
+       LANG="en_US.UTF-8" LANGUAGE="en_US" dpkg-query -W -f='${package}_${Version}_${Architecture}.deb\n' "$pkg_n"
+    }
     LocalPackageDepList() {
        local pkg_f="$1"; shift;
        LANG="en_US.UTF-8" LANGUAGE="en_US" \

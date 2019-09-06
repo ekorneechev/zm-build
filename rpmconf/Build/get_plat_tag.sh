@@ -31,7 +31,6 @@ if [ -f /etc/altlinux-release ]; then
     fi
 fi
 
-
 if [ -f /etc/redhat-release ]; then
    i=`uname -i`
    if [[ "x$i" == "xx86_64" ]] || [[ "x$i" == "xppc64"* ]]; then
@@ -153,6 +152,10 @@ if [ -f /etc/lsb-release ]; then
     fi
     if [ "$RELEASE" = "xenial" ]; then
       echo "16${i}"
+      exit 0
+    fi
+    if [ "$RELEASE" = "bionic" ]; then
+      echo "18${i}"
       exit 0
     fi
     echo "UNKNOWN${i}"

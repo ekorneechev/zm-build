@@ -49,13 +49,26 @@ cp -f ${repoDir}/zm-mailbox/store/build/dist/versions-init.sql                  
 # all local packages to bundle
 cp -f ${repoDir}/zm-build/${arch}/*.*                                                   ${ZCS_REL}/packages
 
-for pkgf in ${repoDir}/zm-packages/bundle/*/*.{rpm,deb}
+for pkgf in ${repoDir}/zm-packages/bundle/*/*.{rpm,deb,changes}
 do
    if ! [[ "$pkgf" =~ src.rpm$ ]]
    then
       [ -f "$pkgf" ] && cp -f "$pkgf"                                                   ${ZCS_REL}/packages
    fi
 done
+
+if [ -f "/etc/redhat-release" ]
+then
+   if \which createrepo 2>&-
+   then
+      ( cd ${ZCS_REL}/packages && createrepo . ) # Create index of packages
+   fi
+else
+   if \which dpkg-scanpackages 2>&-
+   then
+      ( cd ${ZCS_REL}/packages && dpkg-scanpackages . /dev/null > Packages ) # Create index of packages
+   fi
+fi
 
 chmod 755 ${ZCS_REL}/bin/checkService.pl
 chmod 755 ${ZCS_REL}/bin/checkLicense.pl
@@ -95,7 +108,11 @@ else
    echo "FOSS" > ${ZCS_REL}/.BUILD_TYPE
 fi
 
-echo "${os}" > ${ZCS_REL}/.BUILD_PLATFORM
+echo "${buildNo}"          > ${ZCS_REL}/.BUILD_NUM
+echo "${os}"               > ${ZCS_REL}/.BUILD_PLATFORM
+echo "${releaseNo}"        > ${ZCS_REL}/.BUILD_RELEASE_NO
+echo "${releaseCandidate}" > ${ZCS_REL}/.BUILD_RELEASE_CANDIDATE
+echo "${buildTimeStamp}"   > ${ZCS_REL}/.BUILD_TIME_STAMP
 
 ##########################################
 

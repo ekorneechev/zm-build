@@ -25,14 +25,12 @@ if [ $MAJOR_VERSION != 4 ]; then
     echo "Bash's version is $VERSION, need >= 4.0!"
     exit 1
 fi
-
 ID=`id -u`
 
 if [ "x$ID" != "x0" ]; then
   echo "Run as root!"
   exit 1
 fi
-
 
 if [ ! -x "/usr/bin/perl" ]; then
   echo "ERROR: System perl at /usr/bin/perl must be present before installation."
@@ -287,6 +285,7 @@ fi
 D=`date +%s`
 echo "${D}: INSTALL SESSION START" >> /opt/zimbra/.install_history
 installPackages
+
 D=`date +%s`
 echo "${D}: INSTALL SESSION COMPLETE" >> /opt/zimbra/.install_history
 
