@@ -37,7 +37,7 @@
    { name => "zm-nginx-conf",                        },
    { name => "zm-nginx-lookup-store",                },
    { name => "zm-openid-consumer-store",             },
-   { name => "zm-pkg-tool",                          },
+   { name => "zm-pkg-tool",                        remote => "gh-ek",},
    { name => "zm-postfix",                           },
    { name => "zm-proxy-config-admin-zimlet",         },
    { name => "zm-ssdb-ephemeral-store",              },
