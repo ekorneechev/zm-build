@@ -269,7 +269,7 @@ checkPackages() {
                LOCALPROC="x86_64"
             fi
          else
-            LOCALPROC=`uname -i`
+            LOCALPROC=`uname -m`
          fi
 
          if [ x$LOCALPROC != x$PROC ]; then
