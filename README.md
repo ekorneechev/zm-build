@@ -28,6 +28,11 @@
 Только после этого можно запускать сборку:
 
     $ ./build.pl
+    
+Если будет подобная ошибка:
+
+    Server access Error: Received fatal alert: handshake_failure url=https://maven.repository.redhat.com/
+То нужно сменить URL на origin-maven.repository.redhat.com (было достаточно только в zm-mailbox).
 
 После успешной сборки архив будет лежать в следующей директории:
 
