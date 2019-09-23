@@ -2868,7 +2868,11 @@ getPlatformVars() {
          PACKAGEEXT='rpm'
          PACKAGEQUERY='rpm -q'
          PACKAGEVERIFY='rpm -K'
-         STORE_PACKAGES="libreoffice libreoffice-headless"
+         STORE_PACKAGES="libreoffice"
+         DumpFileDetailsFromPackage() {
+            local pkg_n="$1"; shift
+            LANG="en_US.UTF-8" LANGUAGE="en_US" rpmquery "$pkg_n"
+         }
          LocalPackageDepList() {
             local pkg_f="$1"; shift;
             LANG="en_US.UTF-8" LANGUAGE="en_US" \
