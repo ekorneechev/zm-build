@@ -27,7 +27,7 @@
    { name => "zm-helptooltip-zimlet",                },
    { name => "zm-jetty-conf",                        },
    { name => "zm-jython",                            },
-   { name => "zm-launcher",                          },
+   { name => "zm-launcher",                        remote => "gh-ek",},
    { name => "zm-ldap-utilities",                    },
    { name => "zm-ldap-utils-store",                  },
    { name => "zm-licenses",                          },
