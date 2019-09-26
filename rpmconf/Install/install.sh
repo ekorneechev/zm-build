@@ -349,7 +349,6 @@ fi
 RC=$?
 
 #ALT fixes
-chown root:root /etc/pki/java/cacerts
 su - -c "touch /opt/zimbra/zmstat/fd.csv" zimbra
 usermod -a -G postdrop zimbra
 
