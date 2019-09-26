@@ -9,7 +9,7 @@ License: ZPL and other
 Group: Applications/Messaging
 URL: http://www.zimbra.com
 Vendor: Zimbra, Inc.
-Packager: Zimbra, Inc.
+Packager: Evgeniy Korneechev <ekorneechev@altlinux.org>
 BuildRoot: /opt/zimbra
 AutoReqProv: no
 requires: zimbra-core, zimbra-proxy-components, zimbra-memcached
