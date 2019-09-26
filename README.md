@@ -37,6 +37,25 @@
 После успешной сборки архив будет лежать в следующей директории:
 
     ../BUILDS/ALT_64-JUDASPRIEST-884-20170322153033-FOSS-1001/
+    
+### Подготовка
+
+Перед установкой необходимо развернуть локальный репозиторий со всеми собранными пакетами из [../packages](https://github.com/ekorneechev/packages). Также необходимое условие успешной установки и настройки - это `bash` 4-ой версии:
+
+    # apt-get install bash4
+    # mv /bin/bash /bin/bash3
+    # ln -s /bin/bash4 /bin/bash
+
+Также необходимо выполнение следующих условий:
+
+    # control sudo
+    public
+    # cat /etc/hosts
+    <your_local_IP> <your_mailserver_FQDN>
+    # dig -t A <your_mailserver_FQDN>
+    <your_local_IP>
+    # dig -t MX <your_DN>
+    10 <your_mailserver_FQDN>
 
 ## Установка
 
@@ -47,10 +66,4 @@
     # cd zcs
     # ./install.sh
 
-### Примечание
 
-Перед установкой необходимо развернуть локальный репозиторий со всеми собранными пакетами из [../packages](https://github.com/ekorneechev/packages). Также необходимое условие успешной установки и настройки - это `bash` 4-ой версии:
-
-    # apt-get install bash4
-    # mv /bin/bash /bin/bash3
-    # ln -s /bin/bash4 /bin/bash
