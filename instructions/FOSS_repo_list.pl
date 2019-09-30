@@ -18,7 +18,7 @@
    { name => "zm-clam-scanner-store",               tag    => "8.8.15", },
    { name => "zm-clientuploader-admin-zimlet",      tag    => "8.8.15", },
    { name => "zm-clientuploader-store",             tag    => "8.8.15", },
-   { name => "zm-core-utils",                                           }, # +logger fixes from develop
+   { name => "zm-core-utils",                       remote => "gh-ek",  },
    { name => "zm-db-conf",                          tag    => "8.8.15", },
    { name => "zm-dnscache",                         tag    => "8.8.15", },
    { name => "zm-downloads",                        tag    => "8.8.15", },
