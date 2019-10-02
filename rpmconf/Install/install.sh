@@ -22,9 +22,21 @@ VERSION=${VERSION/-release*/}
 VERSION=${VERSION/*version /}
 MAJOR_VERSION=${VERSION:0:1}
 if [ $MAJOR_VERSION != 4 ]; then
-    echo "Bash's version is $VERSION, need >= 4.0!"
+    echo "ERROR: Bash's version is $VERSION, need >= 4.0!"
     exit 1
 fi
+
+# Checking syslog
+rpm -q syslogd rsyslog-classic syslog-ng > /dev/null 2>&1
+if [ $? == 3 ]; then
+  echo "ERROR: Please, install package for zimbra-logger:"
+  echo " - syslog-ng"
+  echo " - syslogd (only p8)"
+  echo " - rsyslog-classic (need troubleshooting)."
+  exit 1
+fi
+
+
 ID=`id -u`
 
 if [ "x$ID" != "x0" ]; then
