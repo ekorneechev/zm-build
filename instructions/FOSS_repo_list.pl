@@ -31,7 +31,7 @@
    { name => "zm-ldap-utilities",                   tag    => "8.8.15", },
    { name => "zm-ldap-utils-store",                 tag    => "8.8.15.p2", },
    { name => "zm-licenses",                         tag    => "8.8.15", },
-   { name => "zm-mailbox",                          tag    => "8.8.15.alt2", remote => "gh-ek", },
+   { name => "zm-mailbox",                          tag    => "8.8.15.alt3", remote => "gh-ek", },
    { name => "zm-migration-tools",                  tag    => "8.8.15", },
    { name => "zm-mta",                              tag    => "8.8.15", },
    { name => "zm-nginx-conf",                       tag    => "8.8.15", },
