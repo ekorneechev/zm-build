@@ -13,7 +13,7 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-JAVA_HOME=/opt/zimbra/common/lib/jvm/java
+JAVA_HOME=/opt/zimbra/common/lib/jvm/jre
 export JAVA_HOME
 
 PATH=/opt/zimbra/bin:${JAVA_HOME}/bin:/opt/zimbra/common/bin:/opt/zimbra/common/sbin:/usr/sbin:${PATH}

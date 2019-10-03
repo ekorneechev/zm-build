@@ -198,7 +198,7 @@ if(isInstalled("zimbra-ldap")) {
 }
 
 if (! $newinstall ) {
-  # zimbra-openjdk-cacerts replaces OZC/lib/jvm/java/jre/lib/security/cacerts
+  # zimbra-openjdk-cacerts replaces OZC/lib/jvm/jre/jre/lib/security/cacerts
   # (re)import our CA cert to reestablish our CA trust
   if ( -f "/opt/zimbra/conf/ca/ca.pem" ) {
     progress("Adding /opt/zimbra/conf/ca/ca.pem to cacerts\n");
@@ -1480,7 +1480,7 @@ sub setDefaults {
     $config{zimbraIPMode}     = "ipv4";
   }
 
-  $config{JAVAHOME} = "/opt/zimbra/common/lib/jvm/java";
+  $config{JAVAHOME} = "/opt/zimbra/common/lib/jvm/jre";
   setLocalConfig ("zimbra_java_home", "$config{JAVAHOME}");
   $config{HOSTNAME} = lc(qx(hostname --fqdn));
   chomp $config{HOSTNAME};
@@ -1497,7 +1497,7 @@ sub setDefaults {
   } else {
     $config{mailboxd_keystore} = "/opt/zimbra/conf/keystore";
   }
-  $config{mailboxd_truststore} = "/opt/zimbra/common/lib/jvm/java/lib/security/cacerts";
+  $config{mailboxd_truststore} = "/opt/zimbra/common/lib/jvm/jre/lib/security/cacerts";
   $config{mailboxd_keystore_password} = genRandomPass();
   $config{mailboxd_truststore_password} = "changeit";
 
