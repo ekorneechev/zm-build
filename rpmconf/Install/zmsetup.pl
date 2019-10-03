@@ -7018,7 +7018,6 @@ sub failConfig {
 }
 
 sub applyConfig {
-  my $rc = runAsRoot("/opt/zimbra/libexec/zmjavafix"); # requires zimbra-base >= 1.0.1-alt3
   defineInstallWebapps();
   if (!(defined ($options{c})) && $newinstall ) {
     if (askYN("Save configuration data to a file?", "Yes") eq "yes") {
